@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sacred Reads | Online Bookstore</title>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    window.SacredReadsDataLayer = {
+      sha256: async function(value) {
+        if (value === undefined || value === null || value === '') return undefined;
+        const data = new TextEncoder().encode(String(value).trim().toLowerCase());
+        const hash = await crypto.subtle.digest('SHA-256', data);
+        return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+      },
+      buildUserData: async function(user) {
+        if (!user) return {
+          client_id: undefined,
+          user_type: 'guest',
+          first_name: undefined, hashed_first_name: undefined,
+          last_name: undefined, hashed_last_name: undefined,
+          email: undefined, hashed_email: undefined,
+          phone_number: undefined, hashed_phone_number: undefined
+        };
+        return {
+          client_id: user.userId,
+          user_type: 'loggedin',
+          first_name: user.firstName,
+          hashed_first_name: await this.sha256(user.firstName),
+          last_name: user.lastName,
+          hashed_last_name: await this.sha256(user.lastName),
+          email: user.email,
+          hashed_email: await this.sha256(user.email),
+          phone_number: user.phone,
+          hashed_phone_number: await this.sha256(user.phone)
+        };
+      }
+    };
+  </script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-M3XV9357');</script>
+  <!-- End Google Tag Manager -->
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-M3XV9357"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <header class="site-header">
+    <div class="brand" data-event="header_click">Sacred Reads<span>✦</span></div>
+    <nav class="nav-links">
+      <button data-menu="Home">Home</button><button data-menu="Books">Books</button><button data-menu="New Arrivals">New Arrivals</button><button data-menu="Best Sellers">Best Sellers</button>
+    </nav>
+    <div class="header-actions">
+      <form id="searchForm"><input id="searchInput" placeholder="Search books..."><button>Search</button></form>
+      <button id="loginBtn" class="ghost">Login</button>
+      <button id="cartBtn" class="cart">Cart <span id="cartCount">0</span></button>
+      <button id="hamburger" class="hamburger">☰</button>
+    </div>
+  </header>
+
+  <aside id="sideMenu" class="side-menu"><button id="closeMenu">×</button><h3>Browse</h3><button data-menu="Home">Home</button><button data-menu="Fiction">Fiction</button><button data-menu="Spirituality">Spirituality</button><button data-menu="Self Help">Self Help</button><button data-menu="Best Sellers">Best Sellers</button></aside>
+  <div id="overlay" class="overlay"></div>
+
+  <main>
+    <section class="hero">
+      <div><p class="eyebrow">READ • REFLECT • GROW</p><h1>Stories that stay<br><em>with you.</em></h1><p>Discover thoughtful books for curious minds, peaceful moments and meaningful journeys.</p><button class="primary" id="shopNow">Shop books →</button></div>
+      <div class="hero-card"><span>Featured</span><strong>The Quiet Path</strong><small>Mindfulness & Spirituality</small><b>₹499</b></div>
+    </section>
+
+    <section class="section"><div class="section-head"><div><p class="eyebrow">CURATED FOR YOU</p><h2>Explore our collection</h2></div><button id="viewAll">View all →</button></div><div id="productGrid" class="product-grid"></div></section>
+
+    <section class="newsletter"><div><p class="eyebrow">STAY INSPIRED</p><h2>One good read, every week.</h2><p>Get new arrivals and reading recommendations in your inbox.</p></div><form id="newsletterForm"><input type="email" required placeholder="Your email address"><button class="primary">Subscribe</button></form></section>
+  </main>
+
+  <div id="modal" class="modal hidden"><div class="modal-card"><button class="modal-close">×</button><div id="modalContent"></div></div></div>
+  <div id="toast" class="toast"></div>
+  <footer><span>© 2026 Sacred Reads</span><div><button data-footer="Instagram">Instagram</button><button data-footer="Contact">Contact</button><button data-footer="Privacy">Privacy</button></div></footer>
+  <script src="app.js"></script>
+</body>
+</html>
